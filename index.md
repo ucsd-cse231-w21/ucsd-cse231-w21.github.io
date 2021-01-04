@@ -29,8 +29,28 @@ compiler design.
 ## Grading
 
 - 10% Weekly review quizzes
-- 30% Three two-week programming projects
-- 60% One open-ended project (with milestones/parts, full rubric)
+- 40% Three two-week programming assignments
+- 50% One open-ended project (with milestones/parts, full rubric to come)
+
+## Projects
+
+The first **two** programming assignments will have **individual
+submission**. However, I encourage you to talk about your approaches and
+collaborate, you just must submit individually. There's a lot of technology
+to learn in the course, so feel free to discuss liberally and share code
+snippets as necessary. In the assignment descriptions, there will be a place
+to give credit to other students you worked with, please use it!
+
+The **third** programming assignment must be completed **and** submitted
+entirely on your own. This is one of the major assessments for the course,
+and you should treat it like a take-home exam.
+
+These first three assignments are designed to get us all to a basic level of
+functionality and understanding. Then, you will have significant choice in
+the project you decide to work on, though generally we expect that projects
+will be extensions of the running compiler we develop in the first part of
+the course. Group work will be allowed (optionally) on the projects, with
+details to come.
 
 ## Schedule
 
