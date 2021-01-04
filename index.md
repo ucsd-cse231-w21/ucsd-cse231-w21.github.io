@@ -67,6 +67,10 @@ of one-on-one and group help (depending on your question):
 - Joe: Wednesday 2-3pm [https://ucsd.zoom.us/my/politz](https://ucsd.zoom.us/my/politz)
 - Yousef: TBD
 
-You can also post questions to the course message board, which you will get
-an invite to along with the first lecture. If you need anything in the
-meantime, you can email Joe at jpolitz@eng.ucsd.edu.
+You can also post questions to the course message board:
+
+[https://edstem.org/us/courses/3287/discussion/](https://edstem.org/us/courses/3287/discussion/)
+
+You will get an invite to in the first few days of the quarter. If you need
+anything in the meantime or can't find your invite, you can email Joe at
+jpolitz@eng.ucsd.edu.
