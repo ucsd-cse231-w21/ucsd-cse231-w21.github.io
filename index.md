@@ -65,7 +65,7 @@ Joe and Yousef have office hours where you can join a Zoom room and get a mix
 of one-on-one and group help (depending on your question):
 
 - Joe: Wednesday 2-3pm [https://ucsd.zoom.us/my/politz](https://ucsd.zoom.us/my/politz)
-- Yousef: TBD
+- Yousef: Tuesday, Thursday 10-11am [https://ucsd.zoom.us/my/yousef](https://ucsd.zoom.us/my/yousef)
 
 You can also post questions to the course message board:
 
