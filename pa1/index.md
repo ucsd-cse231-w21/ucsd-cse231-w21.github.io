@@ -33,23 +33,17 @@ expr := <number>
       | <builtin1>(<expr>)
       | <builtin2>(<expr>, <expr>) (you!)
 op   := + | - | *                  (you!)
-builtin1 := print | abs
+builtin1 := print | abs            (you! [abs])
 builtin2 := max | min | pow        (you!)
 number := 32-bit integer literals
 ```
 
-You can see this (mostly) reflected in the `ast.ts`:
+You can see this (mostly) reflected in the `ast.ts`, with `parser.ts`
+converting from a parse tree representation to the AST representation. You
+will need to add the cases corresponding to binary operators and the new
+builtins, labelled with (new!) in the grammar above.
 
-```
-export type Stmt =
-  | { tag: "define", name: string, value: Expr }
-  | { tag: "expr", expr: Expr }
-
-export type Expr =
-    { tag: "num", value: number }
-  | { tag: "id", name: string }
-  | { tag: "builtin1", name: string, arg: Expr }
-```
+And code generation for them is implemented in `compiler.ts`.
 
 Your task will be to make it so input programs using the binary operators,
 and the builtin functions listed above, have the following behavior:
@@ -118,6 +112,11 @@ npm test
 
 In a file called `README.txt`, answer the following questions:
 
+1. Give three examples of Python programs that use binary operators and/or
+builtins from this PA, but have different behavior than your compiler. For
+each, write:
+  - a sentence about why that is
+  - a sentence about what you might do to extend the compiler to support it
 1. Approximately how many hours did it take you to complete the assignment?
 What parts took the longest?
 2. What advice would you give yourself if you were to start the assignment
