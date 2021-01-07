@@ -116,7 +116,7 @@ npm test
 
 ## Writeup
 
-In a file called `written.txt`, answer the following questions:
+In a file called `README.txt`, answer the following questions:
 
 1. Approximately how many hours did it take you to complete the assignment?
 What parts took the longest?
