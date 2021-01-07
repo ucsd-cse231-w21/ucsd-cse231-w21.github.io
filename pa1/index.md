@@ -39,11 +39,10 @@ number := 32-bit integer literals
 ```
 
 You can see this (mostly) reflected in the `ast.ts`, with `parser.ts`
-converting from a parse tree representation to the AST representation. You
-will need to add the cases corresponding to binary operators and the new
-builtins, labelled with (new!) in the grammar above.
-
-And code generation for them is implemented in `compiler.ts`.
+converting from a parse tree representation to the AST representation. Then
+code generation for several of them is implemented for you in `compiler.ts`.
+You will need to add the cases corresponding to binary operators and the new
+builtins, labeled with (new!) in the grammar above.
 
 Your task will be to make it so input programs using the binary operators,
 and the builtin functions listed above, have the following behavior:
@@ -60,14 +59,15 @@ Your implementation is up to you, but a likely approach is:
 - Add expressions for binary operators and builtin2 to `ast.ts`
 - Add parsing support for these expressions in `parser.ts`
 - Add code generation for these expressions in `compiler.ts`
-- Add TypeScript functions to implement the new builtins in `nodestart.ts`
-and `webstart.ts`
+- Add TypeScript functions to implement the new builtins as necessary (use
+`print` as a guide)
 - Test this as you go by adding tests in the tests/ directory
 - Watch your program work in the browser by opening build/index.html in a
 browser of your choice.
 
-We recommend implementing them one at a time (don't try to do both
-expressions at once), so that you can test more incrementally.
+We recommend implementing these features one at a time (don't try to do
+multiple new kinds of expressions at once), so that you can test more
+incrementally.
 
 ## Testing
 
@@ -124,6 +124,15 @@ from the beginning?
 3. What resources did you find most helpful in completing the assignment?
 4. Who (if anyone) in the class did you work with on the assignment?
 
+## Collaboration
+
+You can discuss your approach and code with anyone in the class, make study
+groups to work together, have public discussions on the course message board,
+and so on. Make sure to give credit to collaborators in your README (see
+below) and make an individual submission. This assignment is predominantly
+_for your learning and practice_. Other assignments in the course will be
+completed on your own and/or with additional assessment and have more
+restrictive collaboration policies.
 
 ## Submission
 
