@@ -12,13 +12,21 @@ In this PA, you'll design and implement a compiler for all but the
 heap-manipulating parts of ChocoPy including a REPL that supports functions
 and global variables.
 
-There is some code from lecture that can help you:
+There is some support code and examples that can help you:
 
-<link>
+- From lecture3, basics of single-argument, single-statement functions
+(you'll need to extend this, but it has simple starting points)
+https://github.com/ucsd-cse231-w21/lecture3
 
-You can use any of this code directly or for inspiration. You might choose to
-base your implementation on how you approached PA1, or take a different
-approach entirely based on what you learned.
+- From a running demo we have, the necessary support for a basic REPL that
+stores global variables in memory and loads them across REPL entries:
+https://github.com/jpolitz/toy-wabt-on-client
+
+You can use any of this code directly or for inspiration -- it is by no means
+guaranteed to perfectly match the ChocoPy spec, but it _does_ run and provide
+some valuable code structure suggestions you will find useful. You might
+choose to base your implementation on how you approached PA1, or take a
+different approach entirely based on what you learned.
 
 We also provide code that has the front-end HTML and JavaScript management of
 the REPL on the main page. There is one interface between this front-end code
@@ -63,6 +71,3 @@ works on interesting examples, followed by discussion and support on how you
 might approach the problematic/incomplete cases.
 
 ## Deliverables
-
-
-
