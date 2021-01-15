@@ -106,4 +106,5 @@ write a few sentences about why.
     - A program that has a type error in a conditional position
     - A program that calls a function from within a loop
     - Printing an integer and a boolean
+    - (EDIT) Two functions that call each other
 
