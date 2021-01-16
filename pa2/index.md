@@ -54,12 +54,8 @@ expr := <literal>
       | <name>
       | <uniop> <expr>
       | <expr> <binop> <expr>
-      | <builtin1>(<expr>)
-      | <builtin2>(<expr>, <expr>) 
 uniop := not | -
 binop := + | - | * | // | % | == | != | <= | >= | < | > | is                 
-builtin1 := print | abs
-builtin2 := max | min | pow      
 literal := None
          | True
          | False
@@ -151,5 +147,6 @@ write a few sentences about why.
     - A program that has a type error in a conditional position
     - A program that calls a function from within a loop
     - Printing an integer and a boolean
+    - A recursive function.
     - Two mutually-recursive functions.
 
