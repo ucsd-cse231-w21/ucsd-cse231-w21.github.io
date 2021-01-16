@@ -41,27 +41,27 @@ You'll be implementing the following sub-grammar of ChocoPy:
 <html>
 <meta charset="utf-8"/>
 <pre>
-<code>program := &ltvar_def | func_def><sup>*</sup> &ltstmt><sup>*</sup>
-var_def := &lttyped_var> = &ltliteral>
-typed_var := &ltname> : &lttype>
-func_def := def &ltname>(&lttyped_var><sup>*</sup>) [-> &lttype>]<sup>?</sup> : &ltfunc_body>
-func_body := &ltvar_def><sup>*</sup> &ltstmt><sup>+</sup>
-stmt := &ltname> = &ltexpr>
-      | if &ltexpr>: &ltstmt><sup>+</sup> [elif &ltexpr>: &ltstmt><sup>+</sup>]<sup>?</sup> [else: &ltstmt><sup>+</sup>]<sup>?</sup>
-      | while &ltexpr>: &ltstmt><sup>+</sup>
+<code>program := &lt;var_def | func_def><sup>*</sup> &lt;stmt><sup>*</sup>
+var_def := &lt;typed_var> = &lt;literal>
+typed_var := &lt;name> : &lt;type>
+func_def := def &lt;name>(&lt;typed_var><sup>*</sup>) [-> &lt;type>]<sup>?</sup> : &lt;func_body>
+func_body := &lt;var_def><sup>*</sup> &lt;stmt><sup>+</sup>
+stmt := &lt;name> = &lt;expr>
+      | if &lt;expr>: &lt;stmt><sup>+</sup> [elif &lt;expr>: &lt;stmt><sup>+</sup>]<sup>?</sup> [else: &lt;stmt><sup>+</sup>]<sup>?</sup>
+      | while &lt;expr>: &lt;stmt><sup>+</sup>
       | pass
-      | return &ltexpr><sup>?</sup>
-      | &ltexpr>
-expr := &ltliteral>
-      | &ltname>
-      | &ltuniop> &ltexpr>
-      | &ltexpr> &ltbinop> &ltexpr>
+      | return &lt;expr><sup>?</sup>
+      | &lt;expr>
+expr := &lt;literal>
+      | &lt;name>
+      | &lt;uniop> &lt;expr>
+      | &lt;expr> &lt;binop> &lt;expr>
 uniop := not | -
-binop := + | - | * | // | % | == | != | &lt= | >= | &lt | > | is                 
+binop := + | - | * | // | % | == | != | &lt;= | >= | &lt; | > | is                 
 literal := None
          | True
          | False
-         | &ltnumber>
+         | &lt;number>
 type := int | bool
 number := 32-bit integer literals</code>
 </pre>
