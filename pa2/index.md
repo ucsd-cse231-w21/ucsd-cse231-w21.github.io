@@ -38,17 +38,62 @@ implementation that you want.
 
 You'll be implementing the following sub-grammar of ChocoPy:
 
-<fill>
+```
+program := <var_def | func_def>* <stmt>*
+var_def := <typed_var> = <literal>
+typed_var := <name> : <type>
+func_def := def <name>(<typed_var>*) [-> <type>]? : <func_body>
+func_body := <var_def>* <stmt>+
+stmt := <name> = <expr>
+      | if <expr>: <stmt>+ [elif <expr>: <stmt>+]? [else: <stmt>+]?
+      | while <expr>: <stmt>+
+      | pass
+      | return <expr>?
+      | <expr>
+expr := <literal>
+      | <name>
+      | <uniop> <expr>
+      | <expr> <binop> <expr>
+      | <builtin1>(<expr>)
+      | <builtin2>(<expr>, <expr>) 
+uniop := not | -
+binop := + | - | * | // | % | == | != | <= | >= | < | > | is                 
+builtin1 := print | abs
+builtin2 := max | min | pow      
+literal := None
+         | True
+         | False
+         | <number>
+type := int | bool
+number := 32-bit integer literals
+```
+
+The grammar above is a strict subset of ChocoPy's. Namely, the grammar above 
+excludes:
+- lists
+- strings
+- classes
+- nested functions
+- for loops
+- global and nonlocal declarations inside a function
 
 Your compiler should have _the same output and error messages_ as ChocoPy for
 programs in this subset. If you need to test out a program to check its
 behavior, you can do so at ChocoPy's web site.
 
 ## REPL
-
+In addition to your existing program editor, you will be implementing a 
+Read–eval–print loop (REPL) similar to CPython's. Feel free to use any of the 
+code in our demo REPL (https://github.com/jpolitz/toy-wabt-on-client) though 
+you are certainly free to explore other approaches. We do expect your 
+implementation to accept any number of REPL entries and behave as described 
+below.
 ### REPL Behavior
-
-### REPL Front-end Interface
+Generally, evaluating a new REPL entry is similar to running a program with 
+some notable differences. Every REPL entry should be able to:
+- declare additional global variables and functions
+- read and assign to global variables declared in the program or previous entries
+- call previously declared functions
 
 ## Discussion Checkpoint
 
@@ -106,5 +151,5 @@ write a few sentences about why.
     - A program that has a type error in a conditional position
     - A program that calls a function from within a loop
     - Printing an integer and a boolean
-    - (EDIT) Two functions that call each other
+    - Two mutually-recursive functions.
 
