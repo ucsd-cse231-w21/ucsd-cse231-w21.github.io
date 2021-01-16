@@ -40,8 +40,7 @@ You'll be implementing the following sub-grammar of ChocoPy:
 
 <html>
 <pre>
-<code>
-program := &ltvar_def | func_def ><sup>*</sup> &ltstmt><sup>*</sup>
+<code>program := &ltvar_def | func_def ><sup>*</sup> &ltstmt><sup>*</sup>
 var_def := &lttyped_var> = &ltliteral>
 typed_var := &ltname> : &lttype>
 func_def := def &ltname>(&lttyped_var><sup>*</sup>) [-> &lttype>]<sup>?</sup> : &ltfunc_body>
@@ -63,12 +62,11 @@ literal := None
          | False
          | &ltnumber>
 type := int | bool
-number := 32-bit integer literals
-</code>
+number := 32-bit integer literals</code>
 </pre>
 </html>
 
-```
+<!-- ```
 program := <var_def | func_def>* <stmt>*
 var_def := <typed_var> = <literal>
 typed_var := <name> : <type>
@@ -92,7 +90,7 @@ literal := None
          | <number>
 type := int | bool
 number := 32-bit integer literals
-```
+``` -->
 
 The grammar above is a strict subset of ChocoPy's. Namely, the grammar above 
 excludes:
