@@ -38,6 +38,36 @@ implementation that you want.
 
 You'll be implementing the following sub-grammar of ChocoPy:
 
+<html>
+<pre>
+<code>
+program := &ltvar_def | func_def ><sup>*</sup> &ltstmt><sup>*</sup>
+var_def := &lttyped_var> = &ltliteral>
+typed_var := &ltname> : &lttype>
+func_def := def &ltname>(&lttyped_var><sup>*</sup>) [-> &lttype>]<sup>?</sup> : &ltfunc_body>
+func_body := &ltvar_def><sup>*</sup> &ltstmt><sup>+</sup>
+stmt := &ltname> = &ltexpr>
+      | if &ltexpr>: &ltstmt><sup>+</sup> [elif &ltexpr>: &ltstmt><sup>+</sup>]<sup>?</sup> [else: &ltstmt><sup>+</sup>]<sup>?</sup>
+      | while &ltexpr>: &ltstmt><sup>+</sup>
+      | pass
+      | return &ltexpr><sup>?</sup>
+      | &ltexpr>
+expr := &ltliteral>
+      | &ltname>
+      | &ltuniop> &ltexpr>
+      | &ltexpr> &ltbinop> &ltexpr>
+uniop := not | -
+binop := + | - | * | // | % | == | != | &lt= | >= | &lt | > | is                 
+literal := None
+         | True
+         | False
+         | &ltnumber>
+type := int | bool
+number := 32-bit integer literals
+</code>
+</pre>
+</html>
+
 ```
 program := <var_def | func_def>* <stmt>*
 var_def := <typed_var> = <literal>
