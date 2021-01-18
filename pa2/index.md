@@ -44,7 +44,7 @@ You'll be implementing the following sub-grammar of ChocoPy:
 <code>program := &lt;var_def | func_def><sup>*</sup> &lt;stmt><sup>*</sup>
 var_def := &lt;typed_var> = &lt;literal>
 typed_var := &lt;name> : &lt;type>
-func_def := def &lt;name>(&lt;typed_var><sup>*</sup>) [-> &lt;type>]<sup>?</sup> : &lt;func_body>
+func_def := def &lt;name>([&lt;typed_var> [, &lt;typed_var>]<sup>*</sup>]<sup>?</sup>) [-> &lt;type>]<sup>?</sup> : &lt;func_body>
 func_body := &lt;var_def><sup>*</sup> &lt;stmt><sup>+</sup>
 stmt := &lt;name> = &lt;expr>
       | if &lt;expr>: &lt;stmt><sup>+</sup> [elif &lt;expr>: &lt;stmt><sup>+</sup>]<sup>?</sup> [else: &lt;stmt><sup>+</sup>]<sup>?</sup>
@@ -56,6 +56,7 @@ expr := &lt;literal>
       | &lt;name>
       | &lt;uniop> &lt;expr>
       | &lt;expr> &lt;binop> &lt;expr>
+      | &lt;name>([&lt;typed_var> [, &lt;typed_var>]<sup>*</sup>]<sup>?</sup>)
 uniop := not | -
 binop := + | - | * | // | % | == | != | &lt;= | >= | &lt; | > | is                 
 literal := None
