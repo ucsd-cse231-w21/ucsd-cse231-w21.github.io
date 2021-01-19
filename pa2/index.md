@@ -56,6 +56,7 @@ expr := &lt;literal>
       | &lt;name>
       | &lt;uniop> &lt;expr>
       | &lt;expr> &lt;binop> &lt;expr>
+      | ( &lt;expr> )
       | &lt;name>([&lt;expr> [, &lt;expr>]<sup>*</sup>]<sup>?</sup>)
 uniop := not | -
 binop := + | - | * | // | % | == | != | &lt;= | >= | &lt; | > | is                 
