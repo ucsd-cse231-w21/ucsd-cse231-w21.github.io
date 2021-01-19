@@ -6,7 +6,7 @@ doodle: "/doodle.png"
 
 # PA2: ChocoPy Functions, Types, and Control Flow
 
-**Draft, not official until this notice removed**
+<!-- **Draft, not official until this notice removed** -->
 
 In this PA, you'll design and implement a compiler for all but the
 heap-manipulating parts of ChocoPy including a REPL that supports functions
@@ -56,7 +56,7 @@ expr := &lt;literal>
       | &lt;name>
       | &lt;uniop> &lt;expr>
       | &lt;expr> &lt;binop> &lt;expr>
-      | &lt;name>([&lt;typed_var> [, &lt;typed_var>]<sup>*</sup>]<sup>?</sup>)
+      | &lt;name>([&lt;expr> [, &lt;expr>]<sup>*</sup>]<sup>?</sup>)
 uniop := not | -
 binop := + | - | * | // | % | == | != | &lt;= | >= | &lt; | > | is                 
 literal := None
