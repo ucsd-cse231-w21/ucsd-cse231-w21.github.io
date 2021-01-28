@@ -144,8 +144,8 @@ might approach the problematic/incomplete cases.
 
 ## Deliverables
 
-You will turn in a single deliverable, a repository containing your
-implementation, with an informative README.md file.
+You will turn in two deliverables, a repository containing your
+implementation, and an informative README file (preferably a pdf file).
 
 There is no autograder for this assignment. You are responsible for testing
 your implementation and ensuring that it matches the ChocoPy reference
