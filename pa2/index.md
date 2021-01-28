@@ -145,7 +145,10 @@ might approach the problematic/incomplete cases.
 ## Deliverables
 
 You will turn in two deliverables, a repository containing your
-implementation, and an informative README file (preferably a pdf file).
+implementation, and an informative README file (preferably markdown or pdf).
+
+Please turn in your codebase here: https://www.gradescope.com/courses/222971/assignments/941917
+and your write-up here: https://www.gradescope.com/courses/222971/assignments/972862
 
 There is no autograder for this assignment. You are responsible for testing
 your implementation and ensuring that it matches the ChocoPy reference
