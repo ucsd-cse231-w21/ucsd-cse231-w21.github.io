@@ -145,7 +145,11 @@ might approach the problematic/incomplete cases.
 ## Deliverables
 
 You will turn in two deliverables, a repository containing your
-implementation, and an informative README file (preferably markdown or pdf).
+implementation, and an informative README file (preferably PDF or markdown).
+
+**Update: We initially asked for everything to be submitted under one assignment and for the write-up to be in markdown.
+If you've already done that, you're done. You don't need to make any changes. You shouldn't be spending your time figuring
+out markdown syntax, so you could use Google Doc, Word, Pages, Latex, or whatever you're fimilar with. Just export it into PDF.** 
 
 Please turn in your codebase here: https://www.gradescope.com/courses/222971/assignments/941917
 and your write-up here: https://www.gradescope.com/courses/222971/assignments/972862
