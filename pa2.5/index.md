@@ -16,7 +16,7 @@ traces of git history and other identifying information. You can provide us
 with a git repository that you anonymize if you'd like to manage this
 yourself.
 
-You can email the instructor by **1pm on Friday, Jan 29** to opt out of this
+You can email the instructor by **4pm on Friday, Jan 29** to opt out of this
 and get a different assignment, but we highly encourage you to participate in
 review.
 
