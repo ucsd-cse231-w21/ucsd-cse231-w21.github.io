@@ -33,6 +33,18 @@ Your feedback will be **shared with the class (including the author of the
 compiler)**, so make sure to keep what you write professional and
 constructive.
 
+### Assigned Compilers
+All submitted compilers are available [here](https://classroom.github.com/a/3vSipAyG). 
+You are assigned two compilers to review, which can be found in `assigned_IDs.csv`.
+First, you need to find your own submission ID, by going to your 
+[PA2 codebase Gradescope submission](https://www.gradescope.com/courses/222971/assignments/941917). 
+After naviagting to your submission, you can find your submission ID as part of the URL:
+https://www.gradescope.com/courses/222971/assignments/941917/submissions/**THIS IS YOUR SUBMISSION ID**
+
+Next, navigate to `assigned_IDs.csv` and find your submission ID in the first column.
+The submission IDs in the seconds and third column are your assigned compilers. 
+You should be able to find these submissions in the repository above. 
+
 ### Tracing the Compiler
 
 For **each** of the compilers you are reviewing, choose two programs that run
@@ -151,7 +163,7 @@ based on reviewing it?
 
 ## Handin
 
-You will hand in this assignment as a PDF, first with the pages containing
+You will [hand in](https://www.gradescope.com/courses/222971/assignments/978616) this assignment as a PDF, first with the pages containing
 the review of the first compiler you were assigned followed by pages
 containing the review of the second. (We wish you could submit and label 2
 pdfs but Gradescope doesn't allow that).
