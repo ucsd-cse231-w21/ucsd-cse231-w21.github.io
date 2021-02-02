@@ -249,6 +249,8 @@ like this might make sense for these classes:
 3: Link$new
 ```
 
+<div class='sidenote'>This structure is called a <a href="https://en.wikipedia.org/wiki/Virtual_method_table">vtable</a>.</div>
+
 That is, the _classes_ appear in order as they are declared in the file. A
 critical decision we had to make for `Link` is making sure that `sum` came
 before `new`, because any `List`-typed object that is used to call `sum`
