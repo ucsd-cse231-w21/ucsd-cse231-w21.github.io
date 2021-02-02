@@ -6,8 +6,9 @@ doodle: "/doodle.png"
 
 # Classes and Inheritance
 
-In lecture 8 we saw a simple implementation of classes-as-structs. The main
-components of the implementation were:
+In [lecture 8](https://github.com/ucsd-cse231-w21/lecture8/) we saw a simple
+implementation of classes-as-structs. The main components of the
+implementation were:
 
 - Adding `class` definitions to the AST
 - Managing the heap offset (stored in the first word of the heap) through a
@@ -27,7 +28,9 @@ to more sophisticated uses of functions, so we will discuss them here.
 ## Methods Without Inheritance
 
 First, we can consider methods _without_ any mention of inheritance. In one
-of the examples from week 4, there is an `inc` method:
+of the [examples from week
+4](https://github.com/ucsd-cse231-w21/lecture7/blob/main/counter.py), there
+is an `inc` method:
 
 ```
 class Counter(object):
