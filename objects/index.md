@@ -222,6 +222,7 @@ generate for a method call like `l.sum()`.
              ;; so its function reference is right at the beginning
              ;; Note that we have to decide on adding 0 based *just* on knowing
              ;; that this is a List, statically we don't know that this is a Link
+(i32.load <address-of-l-again>) ;; self argument
 (call_indirect (type $return_i32))
              ;; assume $return_i32 is defined as in the docs linked above
              ;; this will call the function referenced at the index calculated
