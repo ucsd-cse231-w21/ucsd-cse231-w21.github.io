@@ -298,11 +298,11 @@ the main module, since any code generated from the main module needs to rely
 on those fixed references, and any uses of the classes from the main module
 in the REPL need to keep consistent addresses.
 
-In addition, new classes could be defined at the REPL that contain references
-to existing classes as superclasses. This means we need to look up
-information about classes from the environment that may not be defined in the
-current module, including their types and table layout, and use it to decide
-on the table layout for new classes.
+In addition, new classes could be defined at the REPL that *contain
+references to existing classes as superclasses*. This means we need to look
+up information about classes from the environment that may not be defined in
+the current module, including their types and table layout, and use it to
+decide on the table layout for new classes.
 
 These use cases help us understand some of the necessary information we need
 to track across REPL entries, and for separate compilation of programs that
