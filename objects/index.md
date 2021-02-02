@@ -275,8 +275,37 @@ subclass?
 the `2` into memory in the example above? What information does code
 generation need in order to do this?
 
+## Supporting a REPL
 
+So far, we've had to keep track of several pieces of information to support
+our REPL:
 
+- The location of each global variable
+- The location of a heap offset
+- Any defined functions (which we could provide to the REPL with `import`)
+- The types of functions and globals (to support type-checking across REPL
+entries)
 
+Adding inheritance now means that we need to track the table layout of the
+class environment across REPL entries as well, and each new REPL module needs
+access to a running table of function references. Aside from modifying the
+REPL/runner to consume and produce this new information there's no new
+_infrastructure_ required. However, it's worth pointing out a few things.
+
+First, new classes could be defined at the REPL. To keep things tidy, their
+method references need to go at _higher indices_ in the table than those from
+the main module, since any code generated from the main module needs to rely
+on those fixed references, and any uses of the classes from the main module
+in the REPL need to keep consistent addresses.
+
+In addition, new classes could be defined at the REPL that contain references
+to existing classes as superclasses. This means we need to look up
+information about classes from the environment that may not be defined in the
+current module, including their types and table layout, and use it to decide
+on the table layout for new classes.
+
+These use cases help us understand some of the necessary information we need
+to track across REPL entries, and for separate compilation of programs that
+use classes in general.
 
 
