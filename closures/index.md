@@ -42,7 +42,7 @@ constraints of `g` and `f`.
 ## Inlining
 
 <div class='sidenote'>A <a
-a="https://github.com/ucsd-cse131-f19/ucsd-cse131-f19.github.io/blob/master/lectures/10-22-lec8/notes.pdf">description
+href="https://github.com/ucsd-cse131-f19/ucsd-cse131-f19.github.io/blob/master/lectures/10-22-lec8/notes.pdf">description
 of inlining</a> is available in the course notes from CSE131. “Too large” and
 “too many times” do not have precise definitions.</div>
 
@@ -61,13 +61,14 @@ solution for all cases.
 ## Adding Extra Arguments to `g`
 
 For nested functions **with ChocoPy's restrictions** (we'll revisit this
-below), we know that all calls to `g` must occur within the body of `f`.
-Generally, all calls to a nested function appear within the body of the
-function it is declared in. This gives us some constraints that allow us more
-freedom with compilation than we have with other functions. In particular, we
-know `g` cannot be exported and called from another REPL entry, so if we
-wanted to, say, change its signature to add or remove arguments, we could
-also find all of the places that call `g` and update them appropriately.
+restriction later), we know that all calls to `g` must occur within the body
+of `f`. Generally, all calls to a nested function appear within the body of
+the function it is declared in. This gives us some constraints that allow us
+more freedom with compilation than we have with other functions. In
+particular, we know `g` cannot be exported and called from another REPL
+entry, so if we wanted to, say, change its signature to add or remove
+arguments, we could also find all of the places that call `g` and update them
+appropriately.
 
 A concrete proposal for handling nested functions is to find all of the
 variables that the function _uses_ that aren't defined within the function
@@ -81,11 +82,12 @@ In this proposal, we would have our compiler transform this program into:
 
 ```
 # We use the name f_g to indicate that this was the g we pulled out of f
-# In WASM generation we'd use f$g
+# In WASM generation we'd use f$g, I use the underscore to keep these
+# runnable in Python
 def f_g(x: int, y : int) -> int:
   return x + y
 def f(x : int) -> int:
-  return f$g(x, 10) + f$g(x, 7)
+  return f_g(x, 10) + f_g(x, 7)
 
 print(f(6))
 ```
