@@ -232,5 +232,5 @@ how many cases we can avoid wrapping variables in references, become new,
 fruitful areas of measurement and exploration for the compiler author. On a
 large compiler team, a single developer's entire job might be to test out
 different heuristics that work well for deciding which functions to inline!
-In this example we begin to see the true sophistication that goes into modern
-compiler design.
+In this example we begin to see an inkling of the true sophistication that
+goes into modern compiler design.
