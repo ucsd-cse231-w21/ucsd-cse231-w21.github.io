@@ -21,9 +21,10 @@ It prints `29`. The function `g` has its definition _nested_ within the body
 of `f`, and it has access to read the parameter `x` of the `f` function.
 How might we compile this?
 
-<div class='sidenote'>In fact, the ChocoPy
-<a href="https://chocopy.org/chocopy_implementation_guide.pdf">Implementation
-Guide</a> recommends a strategy like this – search for “static link.”
+<div class='sidenote'>In fact, the ChocoPy <a
+href="https://chocopy.org/chocopy_implementation_guide.pdf">Implementation
+Guide</a> recommends a strategy like the traditional one we describe here –
+search for “static link.”</div>
 
 If we were compiling to traditional assembly, we could have the _stack frame_
 for `g` refer to the _stack frame_ for `f`, since all stack memory in a
@@ -229,3 +230,5 @@ how many cases we can avoid wrapping variables in references, become new,
 fruitful areas of measurement and exploration for the compiler author. On a
 large compiler team, a single developer's entire job might be to test out
 different heuristics that work well for deciding which functions to inline!
+In this example we begin to see the true sophistication that goes into modern
+compiler design.
