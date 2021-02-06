@@ -8,7 +8,7 @@ doodle: "/doodle.png"
 
 **Due Tuesday, February 16th, at 7pm** (About 1.5 weeks)
 
-**Draft, not official until this notice removed**
+<!-- **Draft, not official until this notice removed** -->
 
 In this PA, you will, _without help_, design and implement a compiler for
 classes in ChocoPy. You should treat this assignment as a take-home exam, and
@@ -28,7 +28,7 @@ class_def := class &lt;name>(object):
                   &lt;var_def | method_def><sup>+</sup>
 var_def := &lt;typed_var> = &lt;literal>
 typed_var := &lt;name> : &lt;type>
-method_def := def &lt;name>(self: &lt;type> [, &lt;typed_var>]<sup>*</sup>) [-> type]<sup>?</sup>: &lt;method_body>
+method_def := def &lt;name>(self: &lt;type> [, &lt;typed_var>]<sup>*</sup>) [-> &lt;type>]<sup>?</sup>: &lt;method_body>
 method_body := &lt;var_def><sup>*</sup> &lt;stmt><sup>+</sup>
 stmt := &lt;name> = &lt;expr>
       | &lt;expr>.&lt;name> = &lt;expr>
@@ -102,6 +102,38 @@ at which the object is stored on the heap (in **byte** offset from heap
 location 0). There isn't a specific specified value for the address. However,
 it must be the case that different objects print as different address values.
 
+## Interfaces
+
+To automatically test your compiler, we will need your implementation to respect
+the following requirements:
+
+- You must have a `ast.ts` file for your grammar. The file must at least 
+contain the following two types: 1) _Values_ are used to represent the return 
+result of running a ChocoPy program. The value of running a program is the value
+ of the last statement in a program. All statements are evaluated to **None**, 
+ except for expression statements. 2) _Types_ are used to represent the
+ results of running the type-checker.
+
+```typescript
+export type Value =
+    { tag: "none" }
+  | { tag: "bool", value: boolean }
+  | { tag: "num", value: number }
+  | { tag: "object", name: string, address: number}
+
+export type Type =
+  | {tag: "number"}
+  | {tag: "bool"}
+  | {tag: "none"}
+  | {tag: "class", name: string}
+```
+- You must have a `repl.ts` file implementing a `BasicREPL` class. The `BasicREPL` 
+class must have at least the following two methods:
+```typescript
+async run(source : string) : Promise<Value> 
+async tc(source : string) : Promise<Type>
+```
+
 ## Recommendations, Starting Points, and Resources
 
 There is no official starter code for the project. You are free to use:
@@ -138,9 +170,9 @@ implementation to get to PA3.
 ## Grading and Handin
 
 A number of automated tests will be run on your compiler in order to assess
-it. A _subset_ will be available through Gradescope while the assignment is
+it. A _subset_ will be available through [Gradescope](https://www.gradescope.com/courses/222971/assignments/999592) while the assignment is
 out. We may (and probably will) run a more extensive set of tests that we do
 not share that will also be a part of your grade.
 
-You will submit your _code_ to Gradescope, and you should see immediate
+You will submit your _code_ to [Gradescope](https://www.gradescope.com/courses/222971/assignments/999592), and you should see immediate
 feedback on which tests you passed and failed from the subset we've shared.
