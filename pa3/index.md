@@ -129,11 +129,12 @@ export type Type =
 ```
 - You must have a `repl.ts` file implementing a `BasicREPL` class. The `BasicREPL` 
 class must have at least the following three methods:
+
 ```typescript
 export class BasicREPL {
-  constructor(importObject : any) { ... }                 // a BasicREPL constructor 
-  async run(source : string) : Promise<Value>  { ... }    // run a program
-  async tc(source : string) : Promise<Type> { ... }       // type-check a program
+  constructor(importObject : any) { ... }                 
+  async run(source : string) : Promise<Value>  { ... }    
+  async tc(source : string) : Promise<Type> { ... }       
 }
 ```
 **These methods will be used in the autograder to test your implementation for 
