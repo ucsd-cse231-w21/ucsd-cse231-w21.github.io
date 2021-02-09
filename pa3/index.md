@@ -142,7 +142,10 @@ this PA.** For reference, `run` should compile and evaluate a given program, and
 return the _value_ of the last statement in the program body. Similarly, `tc` 
 should type-check a given program and return the _type_ of the last statement 
 in the body of the program. Equivalently, you can think of `tc` as a function
-returning the _type_ of the _value_ returned by calling `run` on a given program.
+returning the _type_ of the _value_ returned by calling `run` on a given program. 
+You can implement the `tc` interface of a REPL in whatever way is most convenient
+ to you, re-using any pieces of your implementation you find helpful. 
+ `tc` should not run the program to get the answer, however.
 You should also make a `constructor` available which takes an `importObject` 
 as an argument. This constructor is used to pass a special `importObject` with
 a different builtin `print` implementation from the webpage REPL.
