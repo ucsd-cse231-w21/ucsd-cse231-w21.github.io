@@ -4,233 +4,296 @@ title: "UCSD CSE231 – Advanced Compiler Design – Closures"
 doodle: "/doodle.png"
 ---
 
-# Nested Functions and Closures
+# From Nested Functions to Closures
 
-Consider this ChocoPy program:
+Consider this Python program that _isn't_ a ChocoPy program:
 
 ```
-def f(x : int) -> int:
+def f(x : int):
   def g(y : int) -> int:
     return x + y
-  return g(10) + g(7)
+  return g
 
-print(f(6))
+g_where_x_is_6 = f(6)
+print(g_where_x_is_6(5))
 ```
 
-It prints `29`. The function `g` has its definition _nested_ within the body
+<div class='sidenote'>In this development, we probe beyond the limits of
+ChocoPy's restrictions. We'll start doing that more and more.</div>
+
+It prints `11`. The function `g` has its definition _nested_ within the body
 of `f`, and it has access to read the parameter `x` of the `f` function.
-How might we compile this?
+Further, `g` is _returned from f_ as a value. As a point of terminology, we
+can say that the function **escapes** from `f` ([escape
+analysis](https://en.wikipedia.org/wiki/Escape_analysis) can help us
+determine this). This will have profound consequences for the notion of
+functions in our compiler and runtime.
 
-<div class='sidenote'>In fact, the ChocoPy <a
-href="https://chocopy.org/chocopy_implementation_guide.pdf">Implementation
-Guide</a> recommends a strategy like the traditional one we describe here –
-search for “static link.”</div>
+The key insight we need in order to understand this case is that `x` must be
+somehow _stored in a way that is accessible from the returned function
+value_. In general, we'd need to make sure this storage happens for any
+nonlocal variables in the function. That means that somehow, we need to store
+a collection of names mapped to runtime values along with a reference to a
+runnable function.
 
-If we were compiling to traditional assembly, we could have the _stack frame_
-for `g` refer to the _stack frame_ for `f`, since all stack memory in a
-traditional process is part of the same address space. We could compile `g`
-to do a specific memory-offset lookup for `x` in order to find it in its
-caller's frame, which is reminiscent the infrastructure for getting the
-address of variables in C/C++ (the `&` operator).
+Wait a minute.
 
-In WASM, we cannot do this! Since WASM doesn't permit access to the stack
-outside of the current function, such a cross-call variable reference is
-prohibited. We need another strategy to implement nested functions atop WASM.
-Our approach to this could be multi-faceted, depending on the particular
-constraints of `g` and `f`.
+- A collection of names mapped to runtime values
+- A reference to a runnable function
 
-## Inlining
+That sounds an awful lot like **fields** and a **method** inside a class
+definition. Indeed, this insight is a useful one for a sketch of how to
+implement this. The key idea is (as with nested functions) to identify the
+nonlocal variables, and lift the definition outside the function it is nested
+in. However, in the case of functions that escape, we can't just use extra
+arguments. Since `g` could be called from anywhere, we can't rely on all
+other contexts (in other files/REPL entries) knowing that we've changed the
+number of arguments, or having access to the correct value for `x`. So,
+instead of lifting out a function definition, we will lift out the function
+into a method of a _class definition_ with a field for each nonlocal
+variable.
 
-<div class='sidenote'>A <a
-href="https://github.com/ucsd-cse131-f19/ucsd-cse131-f19.github.io/blob/master/lectures/10-22-lec8/notes.pdf">description
-of inlining</a> is available in the course notes from CSE131. “Too large” and
-“too many times” do not have precise definitions.</div>
+<div class='sidenote'>This <a href="https://stackoverflow.com/questions/21858482/what-is-a-java-8-lambda-expression-compiled-to">StackOverflow</a> discussion shows that this is in fact the same approach that Java takes</div>
 
-One straightforward option, if `g` is not recursive, and not too large, and
-not used too many times, is inlining. In many programs, nested functions are
-small helpers, and their code can be easily copied to the point where they
-are called. In this case, that would mean replacing the expressions `g(10)`
-with `x + 10`, and `g(7)` with `x + 7`.
-
-Inlining is an implementation technique that we can perform at the source
-level by transforming the AST directly, and the updated AST would then have
-WASM code generated for it as usual. However, due to recursion, it is not a
-general solution, and due to code size concerns, it is not a pragmatic
-solution for all cases.
-
-## Adding Extra Arguments to `g`
-
-For nested functions **with ChocoPy's restrictions** (we'll revisit this
-restriction later), we know that all calls to `g` must occur within the body
-of `f`. Generally, all calls to a nested function appear within the body of
-the function it is declared in. This gives us some constraints that allow us
-more freedom with compilation than we have with other functions. In
-particular, we know `g` cannot be exported and called from another REPL
-entry, so if we wanted to, say, change its signature to add or remove
-arguments, we could also find all of the places that call `g` and update them
-appropriately.
-
-A concrete proposal for handling nested functions is to find all of the
-variables that the function _uses_ that aren't defined within the function
-(and aren't global), and add them as extra arguments. Then at the call sites,
-we can pass in the appropriate values. This has a nice side effect – we can
-move these programs to the toplevel, because they no longer refer to any
-variables that aren't global or their own parameters! This immediately gives
-us a compilation strategy for them (with a little work on naming).
-
-In this proposal, we would have our compiler transform this program into:
+Here's the idea of the transformation for the above example:
 
 ```
-# We use the name f_g to indicate that this was the g we pulled out of f
-# In WASM generation we'd use f$g, I use the underscore to keep these
-# runnable in Python
-def f_g(x: int, y : int) -> int:
-  return x + y
-def f(x : int) -> int:
-  return f_g(x, 10) + f_g(x, 7)
+class closure_f_g(object):
+  x : int = 0
+  def apply(self, y : int) -> int:
+    return self.x + y
 
-print(f(6))
+def f(x : int):
+  g : G = G()
+  g.x = x
+  return g
+
+g_where_x_is_6 : closure_f_g = f(6)
+print(g_where_x_is_6.apply(5))
 ```
 
-This requires implementing a new algorithm in our compiler that calculates
-the set of _nonlocal variables_ in a function definition. The calculation of
-this set of variables is similar to the kinds of calculations we have to do
-to build environments for our functions or look for undefined identifiers,
-but with the goal of finding names that need this extra-argument treatment.
+The process for this step is:
 
-Unfortunately, this transformation is brittle in the presence of other
-features, even within the restrictions of ChocoPy. ChocoPy allows for the
-`nonlocal` Python keyword, which makes it so a nested function can perform
-_updates_ to a variable from outside its scope. Consider this example:
+- Identify the nonlocal variables in the escaping function
+- Create a new class with a field for each of those nonlocal variables
+- Put the definition of the function in that class as a method, with an extra
+`self` parameter
+- At the original site of the definition of the function, change the program
+to instantiate an object of that class and initialize its fields to the
+values of those variables. Call this object the _closure_
+- At each call to the escaping function, instead perform a method call to the
+function using the closure that stores the variables' values
+
+It's important to note that for the function `g` above, `x` is nonlocal but
+not nonlocally-mutable. The creation of this class structure for the closure
+doesn't eliminate the purpose of shared references for nonlocally-mutable,
+because different sets of nonlocally-mutable variables may be shared across
+many different closures. If multiple closures all have access to read and
+write a shared variable, it would need to be stored as a `Ref` that could
+refer to the same shared heap location across all those closures.
+
+## Surface Syntax and REPL Consequences
+
+Until closures, our transformations have been fully expressible within
+ChocoPy's restrictions. In addition, the results of our AST transformations
+haven't needed to be considered at the REPL at all. That changes with
+closures. In fact, you may have been uneasy already about this line:
 
 ```
-def f(x : int) -> int:
+g_where_x_is_6 = f(6)
+```
+
+Returning `g` from `f` without calling it broke one of ChocoPy's
+restrictions. But this assignment statement breaks another – the variable
+`g_where_x_is_6` doesn't have a corresponding variable initialization!
+Indeed, what would we write for such an initialization?
+
+```
+g_where_x_is_6 : ____________ = _______________
+```
+
+None of our types capture this case. It would be problematic for the
+_programmer_ to use the class type `closure_f_g`, because this type doesn't
+exist in the original program. Before we come up with a solution to this
+problem, we should examine the consequences of our choice to allow returning
+`g` from `f` further.
+
+Since this means that the returned function is a value (a reference to
+object-like data on the heap), we can store it in a global variable, which we
+do in the example. We can also _pass it to other functions_, _call it from
+the REPL_, _store it in an object's fields_, and so on; anything we can do
+with a value. In particular:
+
+1. Passing it to other functions and storing it in objects' fields requires
+that we can describe its type
+2. Calling it from the REPL requires that we can detect which function calls
+are to closures, so we can correctly compile them to a method call instead of
+a function call.
+
+### Types for Closures
+
+Let's tackle task 1. above first. We need a way to describe the type of these
+function values. Python actually has a recommendation for this, which is to
+describe them using the `Callable` type constructor (we pick this because
+it's [a built-in concept in
+Python](https://docs.python.org/3/library/typing.html#typing.Callable)). The
+type of `g` above would be
+
+```
+Callable[[int], int]
+```
+
+The first part of the `Callable` is a list of types for the arguments, and
+the second part is the return type. This is similar to what you may have
+chosen to use to represent the function environment in your compilers, except
+now it's a type that could be used in annotations. We would expect to make it
+part of our `Type` ADT, probably something like:
+
+```
+type Type = ... numbers, booleans, classes, none ...
+  | { tag: "function", args : Array<Type>, ret: Type }
+```
+
+Here's how this would fill into the original program:
+
+```
+def f(x : int) -> Callable[[int], int]:
   def g(y : int) -> int:
-    return h(y) + x
-  def h(z : int) -> int:
-    nonlocal x
-    x = z
-    return x + 1
-  return g(10) + g(7)
-print(f(6))
+    return x + y
+  return g
+
+g_where_x_is_6 : Callable[[int], int] = f(6)
+print(g_where_x_is_6(5))
 ```
 
-This program prints 36 when run through ChocoPy. Crucially, by the time we
-look up the value of `x` in `g`, it is always updated to be the same as the
-value of `y`. So the first call to `g` returns 21 (11 + 10), and the second
-returns (8 + 7). But consider applying the transformation we suggested in the
-last step:
+Now we start to see how our type-checker could help us determine how to
+compile the function call to `g_where_x_is_6` on the last line – since the
+function's type is a `Callable` type, the compiler can have the context to
+know to use `.apply` in the generated code and treat it as a method call,
+rather than expecting a top-level function to be used.
+
+### A Realistic Example
+
+A major consequence of this change is that we could now imagine programs that
+pass functions around as arguments in many positions. For example, consider
+our integer list:
 
 ```
-def f_g(x : int, y : int) -> int:
-  return f_h(x, y) + x
-def f_h(x : int, z : int) -> int:
-  nonlocal x # unclear what this line means anymore since x is local
-  x = z
-  return x + 1
-def f(x : int) -> int:
-  return f_g(x, 10) + f_g(x, 7)
+class List(object):
+  def sum(self : List) -> int:
+    return 1 / 0 # Intentional error! Make sure we implement in subclasses
+  def map(self : List, f : Callable[[int], int]) -> List:
+    print(1 / 0) # Intentional error! Make sure we implement in subclasses
+    return None
+  
+class Empty(List):
+  def sum(self : Link) -> int:
+    return self.val + self.next.sum()
+  def map(self : Empty, f : Callable[[int], int]) -> List:
+    return self
 
-print(f(6))
+class Link(List):
+  val : int = 0
+  next : List = None
+
+  def sum(self : Link) -> int:
+    return self.val + self.next.sum()
+
+  def map(self : Link, f : Callable[[int], int]) -> List:
+    return Link().new(f(self.val), self.next.map(f))
+
+  def new(self : Link, val : int, next : List) -> Link:
+    self.val = val
+    self.next = next
+    return self
+
+def square(x : int) -> int: return x * x
+def twice(x : int) -> int: return x * 2
+
+l : List = None
+l = Link().new(5, Link().new(1, Empty()))
+print(l.map(square).sum())
+print(l.map(twice).sum())
 ```
 
-In both Python and ChocoPy, this program produces a static error that `x` is
-defined twice. Aside from this complication, `g` has its own `x` parameter,
-which is unaffected by modifications to `x` in other places. So if we drop
-the `nonlocal` line to get rid of the "error", this program produces a
-_different answer_ (31 instead of 36).
+Here, the `f` in `Link.map` is two _different_ functions at runtime. This is
+just like dynamic dispatch! This underscores the need for similar
+infrastructure to what we build for inheritance and methods – the function
+value needs to store enough information to find a particular function
+reference in a method table. In our vtable setup, it suffices to think of all
+function values as subclasses of a built-in `Callable` class with an `apply`
+method at offset 0. When we compile these functions with the class expansion
+shown above, they will all have a single `apply` method, so this
+representation works out.
 
-And in fact, Python with `nonlocal` declarations is closer to the
-interesting-case behavior of most programming languages – multiple functions
-can perform updates on, and see the value of, a shared variable.
+In terms of type-checking, we will need to augment our type-checker to
+understand the new `"function"` `Type`. This means that definitions like
+`square` and `twice` above are more like _variables_ than global
+_definitions_ when they are used in argument position (like when calling
+`map`). We need to check that `Callable[[int], int]` matches the argument
+type of `map`, in this case (and report a type error for mismatched function
+types).
 
-So adding an extra parameter works, but not if we want to support use cases
-that share updateable variables between functions.
+We also need to make sure the type-checker checks function calls
+appropriately when the _function_ might be a variable of type `Callable`. We
+need to look up and compare the parameter types from the `Type`, rather than
+from a global environment of definitions by function name, because the name
+in the call expression isn't necessarily the name of any definition (like `f`
+in `map`).
 
-## Storing Shared Variables on the Heap
+So we have an implementation checklist to make this work:
 
-<div class='sidenote'>We could actually refine this constraint further by
-referring to `nonlocal` updates (and in fact with more sophisticated analyses
-refine further), but that would soon break on the very next feature we'll
-discuss, so we move forward with tackling the general case here.</div>
+- Parse a new `Callable` type annotation and add it to our `Type`
+specification.
+- Add an additional step to type-checking function calls when the function
+position could be a function value (a closure).
+- Add a post-type-checking transformation step to the compiler that treats
+closures as classes
+- Add an additional step to the compiler when generating code for function
+calls to closures.
 
-Another attempt could be to store, update, and access shared variables on the
-_heap_ (in WASM, the linear memory). This is promising, because the memory
-persists across all function calls, and indeed, in our setup, across other
-boundaries like modules. Our approach will be to give special treatment and
-attention to variables that both **updated at some point**, and **used within
-a nested function**, like `x` in our f-g-h example above. We will call these
-variables **nonlocally-mutable** variables.
+## Gradually Increasing Complexity Redux
 
-For this development, let's imagine that there exists a class `Ref` that's
-globally available in our Python implementation, that has a single field:
+In the section on nested functions, we talked about how inlining, adding
+extra arguments, and reference wrappers were compilation choices for
+increasingly complex uses of functions. In this case, making the class and
+instantiating closures is yet another technique for handling **escaping**
+functions. This naturally extends the types of functions we can handle, and
+also means we have even more choice in the compiler. Our optimizing compiler
+could now:
+
+- Inline small, non-recursive nested functions
+- Add reference wrappers to variables that are **nonlocally mutable**
+- Add extra arguments to un-inlinable nested functions that **do not escape**
+and change their call sites
+- Create closure classes for functions that **escape** and change their
+instantiation
+
+Note that variable reference wrapping _and_ closure class transformation is
+necessary if an **escaping function** refers to a **nonlocally mutable**
+variable! So the fully general function implementation (for what we've seen
+so far) would need to wrap all variables and create closure classe for all
+functions. We can view the omission of a closure class as an optimization for
+non-escaping functions, and the omission of variable references as an
+optimization for variables without nonlocal mutability, and so on.
+
+<div class='sidenote'>Other popular language implementations, like Python,
+JavaScript, Scheme, and more, handle this case just fine.</div>
+
+It's also worth noting that this is where the implementors of Java gave up!
+! in Java it is a static error to have a
+nested function refer to a **nonlocally mutable** variable:
 
 ```
-class Ref:
-  value: int = 0
+$ jshell
+jshell> int m() {
+   ...>   int x = 10;
+   ...>   Function<Integer, Integer> y = (Integer z) -> x + z;
+   ...>   x = 100;
+   ...>   return y.apply(10);
+   ...> }
+|  Error:
+|  local variables referenced from a lambda expression must be final or effectively final
+|    Function<Integer, Integer> y = (Integer z) -> x + z;
+|                                                  ^
 ```
-
-We will take the approach of adding extra arguments for free variables as
-before, but with a key modifications. For each **nonlocally-mutable**
-variable `x`, we:
-
-- Change its definition to be of type `Ref` instead of `int`, and its initial value to be a newly-created `Ref` object with the initial value in the `value` field
-- Change all _uses_ of the variable to `x.value`, _except_ when passing `x`
-as an extra argument
-- Change all _variable_ updates to the variable from `x = e` to `x.value = e`
-
-This would rewrite our program from above as:
-
-```
-def f_g(x : Ref, y : int) -> int:
-  return f_h(x, y) + x.value
-def f_h(x : Ref, z : int) -> int:
-  x.value = z
-  return x.value + 1
-def f(x_1 : int) -> int:
-  x : Ref = None
-  x = Ref()
-  x.value = x_1
-  return f_g(x, 10) + f_g(x, 7)
-
-print(f(6))
-```
-
-We also changed the original name `x` (a paramter of `f`) to be `x_1`, so
-that we could redefine `x` correctly in the body of `f`. This program, when
-run in ChocoPy or Python, produces the expected answer of `36`. If we trace
-through the evaluation of this program, we see the shared behavior emerges.
-When we evaluate `x = Ref()`, we create the single shared location on the
-heap for this `x` variable. Then that object reference is passed through
-`f_g` and `f_h`, which can see and update that same shared location through
-`x.value`. The uses of `x.value` then observe that shared location at the
-correct times and see the values we expect from the original program.
-
-## Gradually Increasing Complexity
-
-All three of these strategies—inlining, adding extra arguments, and creating
-references for variables variables—are useful. Inlining can actually reduce
-the number of instructions run by a program. Adding extra arguments causes
-more work (extra pushing of arguments) in exchange for working on recursive
-functions and functions that might be too costly to inline. Creating
-references for variables makes yet more work at runtime, in the form of
-allocations and memory access, which is less efficient than stack access
-alone.
-
-Here we have a classic case in compiler design – for different kinds of
-complexity in a program, we can use different compilation techniques to
-compile the “same” programming language feature (in this case nested
-functions). Another view is that adding references around variables always
-works as a fully general solution, but if the variable is never updated it's
-safe to remove the references as an optimization, and if the function is
-sufficiently small, we could inline instead.
-
-An optimizing compiler for Python ought to do the analysis described above,
-and choose _which one_ of the compilation strategies to use based on the
-complexity of the nested functions. The questions of when to inline, and in
-how many cases we can avoid wrapping variables in references, become new,
-fruitful areas of measurement and exploration for the compiler author. On a
-large compiler team, a single developer's entire job might be to test out
-different heuristics that work well for deciding which functions to inline!
-In this example we begin to see an inkling of the true sophistication that
-goes into modern compiler design.

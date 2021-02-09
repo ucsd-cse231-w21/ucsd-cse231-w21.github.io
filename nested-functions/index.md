@@ -234,3 +234,23 @@ large compiler team, a single developer's entire job might be to test out
 different heuristics that work well for deciding which functions to inline!
 In this example we begin to see the true sophistication that goes into modern
 compiler design.
+
+
+
+
+```
+def f(x : int) -> int:
+  def g(y : int) -> int:
+    if y > 10:
+      return h(y + n)
+    else:
+      return x
+  def h(z : int) -> int:
+    n : int = 0
+    n = 100 + z
+    return x + n
+  n : int = 0
+  n = 500
+  return g(15) + g(7)
+print(f(6))
+```
