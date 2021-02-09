@@ -128,17 +128,23 @@ export type Type =
   | {tag: "class", name: string}
 ```
 - You must have a `repl.ts` file implementing a `BasicREPL` class. The `BasicREPL` 
-class must have at least the following two methods:
+class must have at least the following three methods:
 ```typescript
-async run(source : string) : Promise<Value> 
-async tc(source : string) : Promise<Type>
+export class BasicREPL {
+  constructor(importObject : any) { ... }                 // a BasicREPL constructor 
+  async run(source : string) : Promise<Value>  { ... }    // run a program
+  async tc(source : string) : Promise<Type> { ... }       // type-check a program
+}
 ```
-These methods will be used in the autograder to test your implementation for 
-this PA. For reference, `run` should compile and evaluate a given program, and 
+**These methods will be used in the autograder to test your implementation for 
+this PA.** For reference, `run` should compile and evaluate a given program, and 
 return the _value_ of the last statement in the program body. Similarly, `tc` 
 should type-check a given program and return the _type_ of the last statement 
 in the body of the program. Equivalently, you can think of `tc` as a function
 returning the _type_ of the _value_ returned by calling `run` on a given program.
+You should also make a `constructor` available which takes an `importObject` 
+as an argument. This constructor is used to pass a special `importObject` with
+a different builtin `print` implementation from the webpage REPL.
 
 ## Recommendations, Starting Points, and Resources
 
