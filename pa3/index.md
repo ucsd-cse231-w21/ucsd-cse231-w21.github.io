@@ -133,6 +133,12 @@ class must have at least the following two methods:
 async run(source : string) : Promise<Value> 
 async tc(source : string) : Promise<Type>
 ```
+These methods will be used in the autograder to test your implementation for 
+this PA. For reference, `run` should compile and evaluate a given program, and 
+return the _value_ of the last statement in the program body. Similarly, `tc` 
+should type-check a given program and return the _type_ of the last statement 
+in the body of the program. Equivalently, you can think of `tc` as a function
+returning the _type_ of the _value_ returned by calling `run` on a given program.
 
 ## Recommendations, Starting Points, and Resources
 
