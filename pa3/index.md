@@ -150,6 +150,11 @@ You should also make a `constructor` available which takes an `importObject`
 as an argument. This constructor is used to pass a special `importObject` with
 a different builtin `print` implementation from the webpage REPL.
 
+We've uploaded the files we're using for testing to [the toy-wabt repository](https://github.com/jpolitz/toy-wabt-on-client).
+Make sure you're able to `npm test` locally before uploading to the autograder.
+You should not make sure the tests work without making any changes to the 
+definitions in `tests/pa3-visible.test.ts`, `tests/utils.test.ts` or `utils.ts`.
+
 ## Recommendations, Starting Points, and Resources
 
 There is no official starter code for the project. You are free to use:
