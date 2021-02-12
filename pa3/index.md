@@ -152,8 +152,8 @@ a different builtin `print` implementation from the webpage REPL.
 
 We've uploaded the files we're using for testing to [the toy-wabt repository](https://github.com/jpolitz/toy-wabt-on-client).
 Make sure you're able to `npm test` locally before uploading to the autograder.
-You should not make sure the tests work without making any changes to the 
-definitions in `tests/pa3-visible.test.ts`, `tests/utils.test.ts` or `utils.ts`.
+You should make sure the tests work without making any changes to the 
+definitions in `tests/pa3-visible.test.ts` or `tests/utils.test.ts`.
 
 ## Recommendations, Starting Points, and Resources
 
