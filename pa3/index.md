@@ -84,7 +84,7 @@ specified by ChocoPy, we describe the expected behavior here.
 
 Generally, evaluating a new REPL entry is similar to running a program with 
 some notable differences. Every REPL entry should be able to:
-- declare additional global variables and functions
+- declare additional global variables and classes
 - read and assign to global variables declared in the program or previous entries
 - call methods and manipulate fields of previously-created objects
 - instantiate objects of previously-declared classes
