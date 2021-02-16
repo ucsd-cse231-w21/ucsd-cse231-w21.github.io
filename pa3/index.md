@@ -35,6 +35,7 @@ stmt := &lt;name> = &lt;expr>
       | if &lt;expr>: &lt;stmt><sup>+</sup> else: &lt;stmt><sup>+</sup>
       | return &lt;expr><sup>?</sup>
       | &lt;expr>
+      | pass
 expr := &lt;literal>
       | &lt;name>
       | &lt;uniop> &lt;expr>
