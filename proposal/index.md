@@ -53,3 +53,6 @@ proposal are working as expected
 updates you want to make to the examples you plan for March 11 (it's OK to
 scale back or up depending on where you got!)
 - A description of the biggest challenge you faced in your week of implementation
+
+Put the latter two updates into a file called `milestone-your-project.md` in
+the `proposals/` directory.

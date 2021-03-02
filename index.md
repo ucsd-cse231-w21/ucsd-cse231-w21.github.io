@@ -28,8 +28,8 @@ compiler design.
 
 ## Grading
 
-- 10% Weekly review quizzes
-- 40% Three two-week programming assignments
+- 10% Weekly review quizzes, graded on completion
+- 40% Three two-week programming assignments (plus PA2.5, a review assignment)
 - 50% One open-ended project (with milestones/parts, full rubric to come)
 
 ## Projects
