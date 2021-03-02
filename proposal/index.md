@@ -40,3 +40,16 @@ long-term. If you don't want your work to be public, you can do this on a
 private fork of our implementation of chocopy-wasm-compiler and add us to the
 repository to grade it. We won't include your code in the running compiler
 and you can progress independently.
+
+## Project Week Work
+
+(Updated March 1)
+
+For March 4, please submit another pull request. Include:
+
+- Code and tests demonstrating that the 2 programs you chose from your
+proposal are working as expected
+- A description of which examples will work by March 11, including any
+updates you want to make to the examples you plan for March 11 (it's OK to
+scale back or up depending on where you got!)
+- A description of the biggest challenge you faced in your week of implementation
